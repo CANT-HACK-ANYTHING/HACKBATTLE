@@ -1,0 +1,1973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AEGIS — Autonomous Intelligence Agent OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05080b;
+    --bg-2:#080d13;
+    --panel: rgba(16,24,34,0.55);
+    --panel-solid:#0d1620;
+    --panel-border: rgba(255,255,255,0.08);
+    --teal:#37e8c4;
+    --teal-dim: rgba(55,232,196,0.35);
+    --gold:#eab35a;
+    --violet:#8b93ff;
+    --danger:#ef6a6a;
+    --text:#e9eef2;
+    --muted:#7c8794;
+    --muted-2:#4d5762;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 120% 80% at 50% -10%, #0d2a28 0%, transparent 55%),
+      radial-gradient(ellipse 80% 60% at 85% 10%, #16182f 0%, transparent 50%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow:hidden;
+    user-select:none;
+  }
+  .app{
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    width:100vw;
+    position:relative;
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    height:58px;
+    flex:none;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 18px;
+    border-bottom:1px solid var(--panel-border);
+    background:rgba(8,13,19,0.7);
+    backdrop-filter:blur(10px);
+    z-index:20;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .brand-mark{
+    width:28px;height:28px;
+    border-radius:8px;
+    background:conic-gradient(from 210deg, var(--teal), var(--violet), var(--teal));
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 0 16px var(--teal-dim);
+  }
+  .brand-mark svg{width:15px;height:15px;}
+  .brand-text{line-height:1.15;}
+  .brand-text .name{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    letter-spacing:0.3px;
+    background: linear-gradient(90deg, #fff 0%, var(--teal) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .brand-text .sub{font-size:10.5px;color:var(--muted);letter-spacing:0.3px;}
+
+  .toolbar{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid var(--panel-border);
+    padding:4px 6px;
+    border-radius:11px;
+  }
+  .toolbar button{
+    width:30px;height:30px;
+    border:none;
+    background:transparent;
+    border-radius:8px;
+    color:var(--muted);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;
+    transition:background .15s, color .15s;
+  }
+  .toolbar button:hover{background:rgba(255,255,255,0.07); color:var(--text);}
+  .toolbar button.active{background:rgba(55,232,196,0.15); color:var(--teal);}
+  .toolbar button svg{width:15px;height:15px;}
+  .toolbar .div{width:1px;height:18px;background:var(--panel-border);margin:0 4px;}
+
+  .zoom-indicator{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:11.5px;
+    font-weight:600;
+    color:var(--teal);
+    min-width:44px;
+    text-align:center;
+    padding:2px 6px;
+    border-radius:6px;
+    background:rgba(55,232,196,0.08);
+    border:1px solid rgba(55,232,196,0.2);
+  }
+
+  .sim-btn{
+    display:flex;align-items:center;gap:6px;
+    background:rgba(139,147,255,0.12);
+    border:1px solid rgba(139,147,255,0.35);
+    color:var(--violet);
+    font-size:11.5px;
+    font-weight:600;
+    padding:5px 10px;
+    border-radius:8px;
+    cursor:pointer;
+    transition:all .2s;
+  }
+  .sim-btn:hover{background:rgba(139,147,255,0.22);}
+  .sim-btn.active{
+    background:rgba(139,147,255,0.28);
+    border-color:var(--violet);
+    box-shadow:0 0 12px rgba(139,147,255,0.4);
+  }
+
+  .top-right{display:flex;align-items:center;gap:12px;}
+  .new-agent-btn{
+    display:flex;align-items:center;gap:6px;
+    background:linear-gradient(180deg, rgba(55,232,196,0.18), rgba(55,232,196,0.06));
+    border:1px solid rgba(55,232,196,0.4);
+    color:var(--teal);
+    font-family:'Inter',sans-serif;
+    font-weight:600;
+    font-size:12.5px;
+    padding:7px 13px;
+    border-radius:9px;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(55,232,196,0.15);
+    transition:all .2s;
+  }
+  .new-agent-btn:hover{
+    background:rgba(55,232,196,0.25);
+    box-shadow:0 0 18px rgba(55,232,196,0.3);
+    transform:translateY(-1px);
+  }
+  .avatar{
+    width:32px;height:32px;border-radius:50%;
+    background:linear-gradient(135deg,#8b93ff,#37e8c4);
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px;font-weight:700;color:#05080b;
+    font-family:'Space Grotesk',sans-serif;
+    box-shadow:0 0 10px rgba(55,232,196,0.2);
+  }
+
+  /* ---------- Body layout ---------- */
+  .body{
+    flex:1;
+    display:flex;
+    min-height:0;
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:240px;
+    flex:none;
+    border-right:1px solid var(--panel-border);
+    background:rgba(8,12,18,0.65);
+    backdrop-filter:blur(12px);
+    display:flex;
+    flex-direction:column;
+    padding:16px 14px;
+    gap:18px;
+    overflow-y:auto;
+    z-index:10;
+  }
+  .profile{display:flex;align-items:center;gap:10px;}
+  .profile .avatar{width:34px;height:34px;font-size:12px;}
+  .profile .who .name{font-size:13px;font-weight:600;}
+  .profile .who .email{font-size:11px;color:var(--muted);}
+
+  .ghost-btn{
+    width:100%;
+    padding:9px 10px;
+    border-radius:9px;
+    border:1px dashed var(--panel-border);
+    background:rgba(255,255,255,0.02);
+    color:var(--muted);
+    font-size:12.5px;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    cursor:pointer;
+    text-align:left;
+    display:flex;align-items:center;gap:8px;
+    transition:all .15s;
+  }
+  .ghost-btn:hover{border-color:rgba(255,255,255,0.2); color:var(--text); background:rgba(255,255,255,0.04);}
+
+  .side-section{display:flex;flex-direction:column;gap:8px;}
+  .side-head{
+    display:flex;align-items:center;justify-content:space-between;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--muted-2);
+    font-weight:600;
+    padding:0 2px;
+  }
+  .side-head .plus{
+    width:16px;height:16px;border-radius:5px;
+    background:rgba(255,255,255,0.05);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--muted);
+    font-size:11px;line-height:1;cursor:pointer;
+  }
+  .pending-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:8px 10px;
+    border-radius:9px;
+    background:rgba(255,255,255,0.03);
+    font-size:12.5px;
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .pending-row:hover{background:rgba(255,255,255,0.06);}
+  .pending-row .count{
+    background:rgba(234,179,90,0.18);
+    color:var(--gold);
+    font-size:10.5px;font-weight:700;
+    padding:2px 7px;border-radius:20px;
+  }
+
+  .nav-list{display:flex;flex-direction:column;gap:3px;}
+  .nav-item{
+    display:flex;align-items:center;gap:9px;
+    padding:8px 10px;
+    border-radius:8px;
+    font-size:12.5px;
+    color:var(--muted);
+    cursor:pointer;
+    transition:all .15s;
+  }
+  .nav-item .dot{
+    width:6px;height:6px;border-radius:50%;
+    flex:none;
+  }
+  .nav-item:hover{background:rgba(255,255,255,0.04); color:var(--text);}
+  .nav-item.active{background:rgba(55,232,196,0.08); color:var(--text); font-weight:500;}
+
+  .sidebar-spacer{flex:1;}
+
+  .runtime-card{
+    border:1px solid var(--panel-border);
+    background:rgba(255,255,255,0.03);
+    border-radius:12px;
+    padding:11px 12px;
+  }
+  .runtime-card .label{font-size:10px;color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:4px;}
+  .runtime-row{display:flex;align-items:center;justify-content:space-between;}
+  .runtime-time{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;letter-spacing:.5px;}
+  .runtime-controls{display:flex;gap:6px;}
+  .runtime-controls button{
+    width:24px;height:24px;border-radius:50%;border:none;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    transition:all .15s;
+  }
+  .runtime-controls .pause{background:rgba(255,255,255,0.08); color:var(--text);}
+  .runtime-controls .pause:hover{background:rgba(255,255,255,0.15);}
+  .runtime-controls .stop{background:var(--danger); color:#2a0d0d;}
+  .runtime-controls .stop:hover{filter:brightness(1.1);}
+  .runtime-controls svg{width:10px;height:10px;}
+
+  /* ---------- Canvas ---------- */
+  .canvas{
+    position:relative;
+    flex:1;
+    overflow:hidden;
+    cursor:default;
+  }
+  .canvas.panning{cursor:grab;}
+  .canvas.panning:active{cursor:grabbing;}
+
+  .grid-bg{
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    background-size:42px 42px;
+    mask-image:radial-gradient(ellipse 70% 70% at 50% 45%, black 40%, transparent 85%);
+    -webkit-mask-image:radial-gradient(ellipse 70% 70% at 50% 45%, black 40%, transparent 85%);
+    pointer-events:none;
+  }
+  .glow-blob{
+    position:absolute;
+    width:600px;height:600px;
+    border-radius:50%;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle, rgba(55,232,196,0.14) 0%, rgba(55,232,196,0.04) 40%, transparent 70%);
+    pointer-events:none;
+  }
+
+  /* Transformed spatial plane */
+  .spatial-plane{
+    position:absolute;
+    top:0; left:0;
+    width:100%; height:100%;
+    transform-origin:50% 50%;
+    will-change:transform;
+  }
+
+  /* SVG Links */
+  svg.links{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:2;}
+  svg.links path.base{
+    stroke:url(#lineGrad);
+    stroke-width:1.2;
+    opacity:0.45;
+    fill:none;
+  }
+  svg.links path.flow{
+    stroke-width:2;
+    stroke-dasharray:6 240;
+    opacity:0.95;
+    fill:none;
+    animation:flow 3.2s linear infinite;
+  }
+  svg.links path.flow-cyan{stroke:var(--teal); filter:drop-shadow(0 0 4px rgba(55,232,196,0.8));}
+  svg.links path.flow-violet{stroke:var(--violet); filter:drop-shadow(0 0 4px rgba(139,147,255,0.8));}
+  svg.links path.flow-gold{stroke:var(--gold); filter:drop-shadow(0 0 4px rgba(234,179,90,0.8));}
+  svg.links path.flow-danger{stroke:var(--danger); filter:drop-shadow(0 0 4px rgba(239,106,106,0.8));}
+
+  @keyframes flow{
+    to{ stroke-dashoffset:-246; }
+  }
+
+  /* Core node */
+  .core-wrap{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    display:flex; flex-direction:column; align-items:center;
+    z-index:5;
+    pointer-events:auto;
+  }
+  .core-orb{
+    width:84px;height:84px;
+    border-radius:50%;
+    position:relative;
+    background:radial-gradient(circle at 35% 30%, #bdfff0, #37e8c4 45%, #0f6e5c 100%);
+    box-shadow:0 0 44px 8px rgba(55,232,196,0.5), 0 0 0 1px rgba(255,255,255,0.2) inset;
+    animation:pulse 2.6s ease-in-out infinite;
+    cursor:pointer;
+    transition:transform .2s;
+  }
+  .core-orb:hover{transform:scale(1.05);}
+  .core-orb::after{
+    content:'';
+    position:absolute; inset:-16px;
+    border-radius:50%;
+    border:1px solid rgba(55,232,196,0.4);
+    animation:ring 2.6s ease-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ box-shadow:0 0 34px 4px rgba(55,232,196,0.4), 0 0 0 1px rgba(255,255,255,0.15) inset; }
+    50%{ box-shadow:0 0 58px 12px rgba(55,232,196,0.65), 0 0 0 1px rgba(255,255,255,0.25) inset; }
+  }
+  @keyframes ring{
+    0%{ transform:scale(0.85); opacity:0.95; }
+    100%{ transform:scale(1.65); opacity:0; }
+  }
+  .core-label{
+    margin-top:14px;
+    text-align:center;
+    background:rgba(6,10,15,0.7);
+    border:1px solid var(--panel-border);
+    padding:6px 14px;
+    border-radius:9px;
+    backdrop-filter:blur(8px);
+  }
+  .core-label .t1{font-size:10px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase;}
+  .core-label .t2{font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:700; color:var(--text);}
+
+  .anomaly-pill{
+    margin-top:8px;
+    display:flex; align-items:center; gap:6px;
+    background:rgba(234,179,90,0.14);
+    border:1px solid rgba(234,179,90,0.35);
+    color:var(--gold);
+    font-size:11px; font-weight:600;
+    padding:4px 10px;
+    border-radius:20px;
+  }
+  .anomaly-pill .n{font-family:'Space Grotesk',sans-serif;}
+
+  /* Metric stack */
+  .metric-stack{
+    position:absolute;
+    left:36px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:12px;
+    z-index:4;
+  }
+  .metric-card{
+    width:176px;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:11px;
+    padding:9px 12px;
+    backdrop-filter:blur(8px);
+    display:flex; align-items:center; gap:10px;
+    transition:all .2s;
+  }
+  .metric-card:hover{
+    border-color:rgba(255,255,255,0.18);
+    background:rgba(20,30,42,0.65);
+  }
+  .metric-card.highlight{
+    border-color:rgba(234,179,90,0.5);
+    background:linear-gradient(180deg, rgba(234,179,90,0.15), rgba(234,179,90,0.04));
+  }
+  .metric-icon{
+    width:28px;height:28px; flex:none;
+    border-radius:7px;
+    display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,0.06);
+    color:var(--teal);
+  }
+  .metric-card.highlight .metric-icon{ color:var(--gold); background:rgba(234,179,90,0.15); }
+  .metric-icon svg{width:14px;height:14px;}
+  .metric-num{font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; line-height:1;}
+  .metric-label{font-size:10px; color:var(--muted); margin-top:2px;}
+
+  /* Entity fan */
+  .entity-fan{
+    position:absolute;
+    right:36px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex; flex-direction:column; gap:8px;
+    z-index:4;
+  }
+  .entity-chip{
+    width:195px;
+    display:flex; align-items:center; gap:8px;
+    background:rgba(10,15,21,0.6);
+    border:1px solid var(--panel-border);
+    padding:6px 10px;
+    border-radius:8px;
+    backdrop-filter:blur(6px);
+    transition:all .2s;
+  }
+  .entity-chip:hover{border-color:rgba(255,255,255,0.2); background:rgba(16,24,34,0.75);}
+  .entity-chip .status{
+    width:7px;height:7px;border-radius:50%; flex:none;
+  }
+  .status.active{background:var(--teal); box-shadow:0 0 6px var(--teal);}
+  .status.monitor{background:var(--gold); box-shadow:0 0 6px var(--gold);}
+  .status.delayed{background:var(--danger); box-shadow:0 0 6px var(--danger);}
+  .entity-name{font-size:11.5px; font-weight:600; line-height:1.2;}
+  .entity-sub{font-size:9.5px; color:var(--muted); line-height:1.2;}
+
+  /* Alerts panel */
+  .alerts-panel{
+    position:absolute;
+    left:36px;
+    bottom:24px;
+    width:310px;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:12px;
+    backdrop-filter:blur(10px);
+    overflow:hidden;
+    z-index:4;
+  }
+  .alerts-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:9px 12px;
+    border-bottom:1px solid var(--panel-border);
+    font-size:11px; font-weight:600; color:var(--text);
+  }
+  .alerts-head .count{
+    background:rgba(239,106,106,0.18); color:var(--danger);
+    font-size:10px; font-weight:700; padding:1px 7px; border-radius:20px;
+  }
+  .alert-row{
+    display:flex; gap:9px; align-items:flex-start;
+    padding:9px 12px;
+    border-left:2px solid var(--danger);
+    background:rgba(239,106,106,0.05);
+    cursor:pointer;
+    transition:background .15s;
+  }
+  .alert-row:hover{background:rgba(239,106,106,0.1);}
+  .alert-row + .alert-row{border-top:1px solid var(--panel-border);}
+  .alert-row .msg{font-size:11.5px; line-height:1.35;}
+  .alert-row .meta{font-size:9.5px; color:var(--muted); margin-top:2px;}
+
+  /* Footer tag */
+  .footer-tag{
+    position:absolute;
+    right:20px; bottom:16px;
+    font-size:10.5px;
+    color:var(--muted-2);
+    display:flex; align-items:center; gap:6px;
+    z-index:4;
+  }
+  .footer-tag .live-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--teal);
+    box-shadow:0 0 6px var(--teal);
+    animation:blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink{ 50%{opacity:0.3;} }
+
+  /* ---------- Agent Windows (Spatial Nodes) ---------- */
+  .agent-window{
+    position:absolute;
+    background:rgba(12,19,28,0.85);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:var(--radius);
+    backdrop-filter:blur(14px);
+    box-shadow:0 8px 32px rgba(0,0,0,0.45);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    z-index:6;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  .agent-window:hover{
+    border-color:rgba(55,232,196,0.35);
+  }
+  .agent-window.selected{
+    border-color:var(--teal);
+    box-shadow:0 0 24px rgba(55,232,196,0.25), 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .agent-compact {
+    width: 250px !important;
+    height: auto !important;
+    min-height: unset !important;
+    cursor: pointer;
+    transition: width 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .agent-compact:hover {
+    border-color: rgba(55, 232, 196, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(55, 232, 196, 0.15);
+  }
+  .agent-compact-body {
+    padding: 8px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .agent-compact-task {
+    font-size: 11px;
+    line-height: 1.35;
+    color: #8fa0b0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .agent-header-btn {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .agent-header-btn:hover {
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .agent-io-badge {
+    font-size: 9.5px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: var(--muted-bright);
+    display: inline-block;
+  }
+  .agent-window.state-ACTIVE, .agent-window.state-EXECUTING, .agent-window.state-LEARNING{border-top:2px solid var(--teal);}
+  .agent-window.state-THINKING{border-top:2px solid var(--violet);}
+  .agent-window.state-APPROVAL_REQUIRED, .agent-window.state-WAITING{border-top:2px solid var(--gold);}
+  .agent-window.state-BLOCKED, .agent-window.state-ERROR{border-top:2px solid var(--danger);}
+
+  .agent-header{
+    height:38px;
+    padding:0 10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    background:rgba(255,255,255,0.02);
+    cursor:grab;
+    user-select:none;
+  }
+  .agent-header:active{cursor:grabbing;}
+  .agent-title{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;
+    font-size:12.5px;
+  }
+  .agent-status-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:4px;
+    font-size:9.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:2px 6px;
+    border-radius:12px;
+  }
+  .status-dot{width:5px;height:5px;border-radius:50%;}
+  .badge-ACTIVE, .badge-EXECUTING{background:rgba(55,232,196,0.12); color:var(--teal);}
+  .badge-ACTIVE .status-dot, .badge-EXECUTING .status-dot{background:var(--teal); box-shadow:0 0 6px var(--teal);}
+  .badge-THINKING{background:rgba(139,147,255,0.15); color:var(--violet);}
+  .badge-THINKING .status-dot{background:var(--violet); box-shadow:0 0 6px var(--violet);}
+  .badge-WAITING, .badge-APPROVAL_REQUIRED{background:rgba(234,179,90,0.15); color:var(--gold);}
+  .badge-WAITING .status-dot, .badge-APPROVAL_REQUIRED .status-dot{background:var(--gold); box-shadow:0 0 6px var(--gold);}
+  .badge-BLOCKED, .badge-ERROR{background:rgba(239,106,106,0.15); color:var(--danger);}
+  .badge-BLOCKED .status-dot, .badge-ERROR .status-dot{background:var(--danger); box-shadow:0 0 6px var(--danger);}
+
+  .agent-body{
+    padding:10px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    font-size:11px;
+    overflow:hidden;
+  }
+  .agent-task{
+    line-height:1.35;
+    color:var(--text);
+    font-weight:500;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .agent-progress-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .agent-progress-bar{
+    flex:1;
+    height:5px;
+    border-radius:4px;
+    background:rgba(255,255,255,0.08);
+    overflow:hidden;
+  }
+  .agent-progress-fill{
+    height:100%;
+    border-radius:4px;
+    background:linear-gradient(90deg, var(--teal), #58f0d2);
+    transition:width .3s ease;
+  }
+  .agent-progress-text{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:10.5px;
+    font-weight:600;
+    color:var(--teal);
+    min-width:28px;
+    text-align:right;
+  }
+  .agent-meta-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px;
+    background:rgba(255,255,255,0.02);
+    padding:6px 8px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.04);
+  }
+  .agent-meta-item{display:flex;flex-direction:column;gap:1px;}
+  .agent-meta-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;}
+  .agent-meta-val{font-size:10px;font-weight:600;}
+
+  .agent-action{
+    font-size:10.5px;
+    color:var(--muted);
+    line-height:1.3;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+    background:rgba(0,0,0,0.2);
+    padding:5px 8px;
+    border-radius:6px;
+    border-left:2px solid var(--teal);
+  }
+  .agent-actions-row{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    margin-top:auto;
+    padding-top:4px;
+  }
+  .agent-btn{
+    flex:1;
+    padding:5px 8px;
+    border-radius:6px;
+    border:1px solid var(--panel-border);
+    background:rgba(255,255,255,0.04);
+    color:var(--text);
+    font-size:10.5px;
+    font-weight:600;
+    cursor:pointer;
+    text-align:center;
+    transition:all .15s;
+  }
+  .agent-btn:hover{background:rgba(255,255,255,0.09);}
+  .agent-btn.inspect-btn{
+    background:rgba(55,232,196,0.12);
+    border-color:rgba(55,232,196,0.3);
+    color:var(--teal);
+  }
+  .agent-btn.inspect-btn:hover{background:rgba(55,232,196,0.22);}
+
+  .resize-handle{
+    position:absolute;
+    right:2px;
+    bottom:2px;
+    width:12px;
+    height:12px;
+    cursor:se-resize;
+    display:flex;
+    align-items:flex-end;
+    justify-content:flex-end;
+  }
+  .resize-handle::after{
+    content:'';
+    width:6px;
+    height:6px;
+    border-right:2px solid var(--muted-2);
+    border-bottom:2px solid var(--muted-2);
+  }
+
+  /* ---------- Inspector Panel ---------- */
+  .inspector{
+    position:absolute;
+    top:0; right:0; bottom:0;
+    width:380px;
+    background:rgba(8,13,20,0.95);
+    border-left:1px solid var(--panel-border);
+    backdrop-filter:blur(16px);
+    z-index:25;
+    display:none;
+    flex-direction:column;
+    box-shadow:-10px 0 30px rgba(0,0,0,0.5);
+    animation:slideLeft .2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .inspector.open{display:flex;}
+  @keyframes slideLeft{from{transform:translateX(100%);} to{transform:translateX(0);}}
+  .inspector-header{
+    padding:14px 16px;
+    border-bottom:1px solid var(--panel-border);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .inspector-tabs{
+    display:flex;
+    border-bottom:1px solid var(--panel-border);
+    background:rgba(0,0,0,0.15);
+    padding:0 10px;
+    overflow-x:auto;
+  }
+  .inspector-tab{
+    padding:10px 12px;
+    font-size:11.5px;
+    color:var(--muted);
+    font-weight:500;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    white-space:nowrap;
+    transition:all .15s;
+  }
+  .inspector-tab:hover{color:var(--text);}
+  .inspector-tab.active{color:var(--teal); border-bottom-color:var(--teal); font-weight:600;}
+  .inspector-body{
+    flex:1;
+    overflow-y:auto;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+  }
+
+  /* ---------- Modals ---------- */
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    backdrop-filter:blur(8px);
+    z-index:50;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-card{
+    width:100%;
+    max-width:480px;
+    background:rgba(12,18,26,0.95);
+    border:1px solid rgba(55,232,196,0.3);
+    border-radius:var(--radius);
+    box-shadow:0 12px 48px rgba(0,0,0,0.6), 0 0 24px rgba(55,232,196,0.15);
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .modal-header{
+    padding:16px 20px;
+    border-bottom:1px solid var(--panel-border);
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .modal-title{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
+  .modal-body{padding:20px;display:flex;flex-direction:column;gap:14px;}
+  .form-group{display:flex;flex-direction:column;gap:6px;}
+  .form-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;}
+  .form-input, .form-select, .form-textarea{
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--panel-border);
+    border-radius:8px;
+    padding:8px 12px;
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-size:12.5px;
+    outline:none;
+    transition:border-color .15s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus{border-color:var(--teal);}
+  .modal-footer{
+    padding:14px 20px;
+    border-top:1px solid var(--panel-border);
+    display:flex;align-items:center;justify-content:flex-end;gap:10px;
+    background:rgba(0,0,0,0.2);
+  }
+
+  ::-webkit-scrollbar{width:5px;height:5px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:4px;}
+  ::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,0.25);}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5z" fill="#05080b"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5" stroke="#05080b" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="brand-text">
+        <div class="name">AEGIS</div>
+        <div class="sub">Autonomous Intelligence OS</div>
+      </div>
+    </div>
+
+    <div class="toolbar" role="toolbar">
+      <button id="toolSelectBtn" class="active" title="Select (V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4l7 16 2-7 7-2z"/></svg></button>
+      <button id="toolPanBtn" title="Pan (H or Space+Drag)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/></svg></button>
+      <div class="div"></div>
+      <button id="zoomInBtn" title="Zoom in (+)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M11 8v6M8 11h6M21 21l-4-4"/></svg></button>
+      <div class="zoom-indicator" id="zoomDisplay">100%</div>
+      <button id="zoomOutBtn" title="Zoom out (-)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M21 21l-4-4"/></svg></button>
+      <button id="resetViewBtn" title="Reset View (100% and Center)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <div class="div"></div>
+      <button id="simBtn" class="sim-btn" title="Run autonomous demo lifecycle"><span style="width:6px;height:6px;border-radius:50%;background:var(--violet);"></span>Simulate</button>
+    </div>
+
+    <div class="top-right">
+      <button id="openNewAgentBtn" class="new-agent-btn">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+        <span>New agent</span>
+      </button>
+      <div class="avatar" title="Maya Chen (Operator)">MC</div>
+    </div>
+  </header>
+
+  <div class="body">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="avatar">MC</div>
+        <div class="who">
+          <div class="name">Maya Chen</div>
+          <div class="email">maya@aegis-os.ai</div>
+        </div>
+      </div>
+
+      <button class="ghost-btn" id="sidebarDeployBtn">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>
+        Deploy task payload
+      </button>
+
+      <div class="side-section">
+        <div class="side-head">
+          <span>Pending review</span>
+        </div>
+        <div class="pending-row" id="pendingEscalationsRow">
+          <span>Escalated tasks</span>
+          <span class="count" id="pendingCountBadge">2</span>
+        </div>
+      </div>
+
+      <!-- Build workflow: NOTE "Connect APIs" is REMOVED per requirement 16 -->
+      <div class="side-section">
+        <div class="side-head">
+          <span>Build workflow</span>
+          <span class="plus" id="workflowPlusBtn">+</span>
+        </div>
+        <div class="nav-list">
+          <div class="nav-item active"><span class="dot" style="background:var(--teal)"></span>Define agent goals</div>
+          <div class="nav-item"><span class="dot" style="background:var(--gold)"></span>Set guardrails</div>
+          <div class="nav-item"><span class="dot" style="background:var(--teal)"></span>Train on feedback</div>
+          <div class="nav-item"><span class="dot" style="background:var(--muted-2)"></span>Deploy &amp; monitor</div>
+        </div>
+      </div>
+
+      <div class="sidebar-spacer"></div>
+
+      <div class="runtime-card">
+        <div class="label">Agent runtime</div>
+        <div class="runtime-row">
+          <div class="runtime-time" id="runtimeClock">01:24:08</div>
+          <div class="runtime-controls">
+            <button class="pause" id="clockToggleBtn"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
+            <button class="stop" id="clockResetBtn"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Canvas -->
+    <main class="canvas" id="canvas">
+      <div class="grid-bg"></div>
+      <div class="glow-blob"></div>
+
+      <!-- Transformed spatial plane containing all spatial nodes and SVG links -->
+      <div class="spatial-plane" id="spatialPlane">
+        <svg class="links" id="links">
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#37e8c4" stop-opacity="0.06"/>
+              <stop offset="100%" stop-color="#37e8c4" stop-opacity="0.55"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <!-- Left metric stack -->
+        <div class="metric-stack" id="metricStack">
+          <div class="metric-card" data-node="m0">
+            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="3.2"/></svg></div>
+            <div>
+              <div class="metric-num">18</div>
+              <div class="metric-label">Tasks queued</div>
+            </div>
+          </div>
+          <div class="metric-card" data-node="m1">
+            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
+            <div>
+              <div class="metric-num" id="activeAgentsMetric" style="color:var(--teal)">5</div>
+              <div class="metric-label">Active agents</div>
+            </div>
+          </div>
+          <div class="metric-card highlight" data-node="m2">
+            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg></div>
+            <div>
+              <div class="metric-num">24</div>
+              <div class="metric-label">Automated today</div>
+            </div>
+          </div>
+          <div class="metric-card" data-node="m3">
+            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l7 3v6c0 5-3.4 8.4-7 10-3.6-1.6-7-5-7-10V5l7-3z"/></svg></div>
+            <div>
+              <div class="metric-num">32</div>
+              <div class="metric-label">Guardrail checks</div>
+            </div>
+          </div>
+          <div class="metric-card" data-node="m4">
+            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9L2.7 17a1.8 1.8 0 001.5 2.7h15.6a1.8 1.8 0 001.5-2.7L13.7 3.9a1.8 1.8 0 00-3.4 0z"/></svg></div>
+            <div>
+              <div class="metric-num" style="color:var(--gold)">12</div>
+              <div class="metric-label">Escalations</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Central Core Node -->
+        <div class="core-wrap" id="coreWrap">
+          <div class="core-orb" id="coreOrb" title="AEGIS Central Intelligence Core"></div>
+          <div class="core-label">
+            <div class="t1">Autonomous Kernel</div>
+            <div class="t2">AEGIS Intelligence Mesh</div>
+          </div>
+          <div class="anomaly-pill">Agents: <span class="n" id="coreAgentCount">5</span> | Guardrails <span class="n" style="color:var(--teal)">SECURE</span></div>
+        </div>
+
+
+
+        <!-- Container for dynamically rendered agent windows -->
+        <div id="agentsContainer"></div>
+      </div>
+
+      <!-- Guardrail alerts -->
+      <div class="alerts-panel">
+        <div class="alerts-head"><span>Guardrail alerts</span><span class="count">2</span></div>
+        <div class="alert-row" onclick="openApprovalModal('appr-01')">
+          <div>
+            <div class="msg">Escalation threshold exceeded — Refund Agent</div>
+            <div class="meta">2 minutes ago</div>
+          </div>
+        </div>
+        <div class="alert-row" onclick="openApprovalModal('appr-02')">
+          <div>
+            <div class="msg">Unusual latency detected on Shipping API</div>
+            <div class="meta">5 minutes ago</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-tag"><span class="live-dot"></span>Live &bull; AEGIS OS Active</div>
+    </main>
+
+    <!-- Right Inspector Panel -->
+    <aside class="inspector" id="inspectorPanel">
+      <div class="inspector-header">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span id="inspectorIcon" style="font-size:20px;">🛒</span>
+          <div>
+            <div id="inspectorTitle" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;">Shopping Agent</div>
+            <div id="inspectorSubtitle" style="font-size:10.5px;color:var(--muted);">ID: agent-shop-01 &bull; SHOPPING</div>
+          </div>
+        </div>
+        <button onclick="closeInspector()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <div class="inspector-tabs">
+        <div class="inspector-tab active" onclick="switchTab('overview')">Overview</div>
+        <div class="inspector-tab" onclick="switchTab('task')">Task</div>
+        <div class="inspector-tab" onclick="switchTab('memory')">Memory</div>
+        <div class="inspector-tab" onclick="switchTab('guardrails')">Guardrails</div>
+        <div class="inspector-tab" onclick="switchTab('api')">API Operations</div>
+        <div class="inspector-tab" onclick="switchTab('activity')">Activity</div>
+      </div>
+
+      <div class="inspector-body" id="inspectorBody">
+        <!-- Injected via JavaScript -->
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Modal: Create New Agent -->
+<div class="modal-overlay" id="newAgentModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Create New Agent</div>
+      <button onclick="closeNewAgentModal()" style="background:transparent;border:none;color:var(--muted);cursor:pointer;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <form id="newAgentForm" class="modal-body" onsubmit="handleCreateAgent(event)">
+      <div class="form-group">
+        <label class="form-label">Agent Category / Type</label>
+        <select class="form-select" id="newAgentType" onchange="handleTypeSelection(this.value)">
+          <option value="shopping">🛒 Shopping Agent</option>
+          <option value="email">📧 Email Security Agent</option>
+          <option value="learning">📚 Learning Agent</option>
+          <option value="security">🔐 Security Agent</option>
+          <option value="subscription">🎬 Subscription Agent</option>
+          <option value="travel">✈️ Travel Agent</option>
+          <option value="calendar">📅 Calendar Agent</option>
+          <option value="finance">💳 Finance Agent</option>
+          <option value="document">📄 Document Agent</option>
+          <option value="assistant">🤖 Personal Assistant</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Agent Display Name</label>
+        <input class="form-input" id="newAgentName" value="Travel Agent" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Task / Primary Mission</label>
+        <textarea class="form-textarea" id="newAgentGoal" rows="3" required>Find flights from BLR to SFO with flexible rebooking under ₹80,000</textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="form-group">
+          <label class="form-label">Permission Level</label>
+          <select class="form-select" id="newAgentPerm">
+            <option value="approval_required">Approval Required</option>
+            <option value="autonomous">Autonomous</option>
+            <option value="restricted">Restricted</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Automation Level</label>
+          <select class="form-select" id="newAgentAuto">
+            <option value="supervised">Supervised</option>
+            <option value="full_auto">Full Auto</option>
+            <option value="manual_verification">Manual Verification</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer" style="margin:0 -20px -20px -20px;">
+        <button type="button" class="agent-btn" onclick="closeNewAgentModal()">Cancel</button>
+        <button type="submit" class="new-agent-btn">Create Agent</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal: Human Approval Required -->
+<div class="modal-overlay" id="approvalModal">
+  <div class="modal-card" style="border-color:rgba(234,179,90,0.4)">
+    <div class="modal-header" style="background:rgba(234,179,90,0.08);">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:18px;">🛡️</span>
+        <div>
+          <div class="modal-title" style="color:var(--gold)">Human Approval Mandated</div>
+          <div id="apprAgentSub" style="font-size:11px;color:var(--muted)">Security Agent</div>
+        </div>
+      </div>
+      <div style="padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;background:rgba(234,179,90,0.18);color:var(--gold);border:1px solid var(--gold);">
+        HIGH RISK
+      </div>
+    </div>
+    <div class="modal-body">
+      <div>
+        <div class="form-label">Proposed Action</div>
+        <div id="apprActionTitle" style="font-size:13px;font-weight:600;margin-top:2px;">Revoke Compromised Third-Party OAuth Secret #9921</div>
+      </div>
+      <div>
+        <div class="form-label">Rationale / Why AI Wants To Do It</div>
+        <div id="apprReason" style="font-size:11.5px;color:var(--muted);background:rgba(255,255,255,0.02);padding:8px 10px;border-radius:6px;line-height:1.4;">
+          Token accessed customer PII database from non-allowlisted IP range (185.220.101.5).
+        </div>
+      </div>
+      <div>
+        <div class="form-label">Anticipated Impact</div>
+        <div id="apprImpact" style="font-size:11.5px;color:var(--muted);background:rgba(255,255,255,0.02);padding:8px 10px;border-radius:6px;line-height:1.4;">
+          Immediate session termination for integrated reporting dashboard.
+        </div>
+      </div>
+      <div style="font-size:10.5px;color:var(--muted);font-style:italic;border-left:2px solid var(--gold);padding-left:8px;">
+        AEGIS Safety Boundary: Autonomous authority is bounded. High-impact operations pause until verified by human operator.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="agent-btn" style="color:var(--danger);border-color:rgba(239,106,106,0.3)" onclick="resolveApproval(false)">Reject Action</button>
+      <button class="new-agent-btn" style="background:linear-gradient(180deg, rgba(234,179,90,0.25), rgba(234,179,90,0.1));border-color:var(--gold);color:var(--gold);" onclick="resolveApproval(true)">Authorize Action</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==========================================================================
+  // AEGIS OS — Autonomous Multi-Agent Kernel & Spatial Controller
+  // ==========================================================================
+
+  // State
+  let zoom = 1.0;
+  let pan = { x: 0, y: 0 };
+  let activeTool = 'select';
+  let selectedAgentId = 'agent-learn-01';
+  let expandedAgentId = null; // Minimized on load by default
+  let inspectorCurrentTab = 'overview';
+  let simulationActive = false;
+
+  const defaultAgents = [
+    {
+      id: 'agent-learn-01',
+      name: 'Learning Agent',
+      type: 'learning',
+      icon: '📚',
+      status: 'LEARNING',
+      goal: 'Ingesting dynamic API schemas and fine-tuning heuristic embeddings',
+      task: 'Ingesting dynamic API schemas and fine-tuning heuristic embeddings',
+      progress: 74,
+      x: 340, y: 130, w: 360, h: 320,
+      memory: 'CONNECTED',
+      guardrails: 'ACTIVE',
+      action: 'Indexing 48 semantic tool signatures into vector space...',
+      perm: 'Autonomous',
+      auto: 'Full Auto',
+      inputs: [
+        { label: 'Schema Manifest', type: 'JSON', source: 'OpenAPI Spec v3' },
+        { label: 'Telemetry Stream', type: 'gRPC', source: 'Kernel Telemetry' }
+      ],
+      outputs: [
+        { label: 'Vector Index', type: 'HNSW', destination: 'Memory Agent' },
+        { label: 'Heuristic Rules', type: 'Policy', destination: 'Security Agent' }
+      ],
+      tools: ['Schema Parser', 'Vector DB', 'Semantic Reasoner']
+    },
+    {
+      id: 'agent-sec-02',
+      name: 'Security Agent',
+      type: 'security',
+      icon: '🔐',
+      status: 'ACTIVE',
+      goal: 'Continuous boundary enforcement and unauthorized token revocation',
+      task: 'Continuous boundary enforcement and unauthorized token revocation',
+      progress: 92,
+      x: 740, y: 110, w: 360, h: 320,
+      memory: 'CONNECTED',
+      guardrails: 'ACTIVE',
+      action: 'Monitoring OAuth token usage and inspecting runtime egress...',
+      perm: 'Approval Required',
+      auto: 'Supervised',
+      inputs: [
+        { label: 'Audit Trail', type: 'Stream', source: 'Kernel Audit Log' },
+        { label: 'Policy Feed', type: 'Rules', source: 'Learning Agent' }
+      ],
+      outputs: [
+        { label: 'Revocation Signals', type: 'Signal', destination: 'IAM Controller' }
+      ],
+      tools: ['IAM Validator', 'Sandbox Scanner', 'Audit Logger']
+    },
+    {
+      id: 'agent-res-03',
+      name: 'Research Agent',
+      type: 'research',
+      icon: '🔬',
+      status: 'EXECUTING',
+      goal: 'Gathering multi-source market intelligence and cross-referencing benchmarks',
+      task: 'Gathering multi-source market intelligence and cross-referencing benchmarks',
+      progress: 61,
+      x: 340, y: 410, w: 360, h: 320,
+      memory: 'CONNECTED',
+      guardrails: 'ACTIVE',
+      action: 'Synthesizing benchmark telemetry across 14 distributed clusters...',
+      perm: 'Autonomous',
+      auto: 'Full Auto',
+      inputs: [
+        { label: 'Target Queries', type: 'Query[]', source: 'Planning Agent' }
+      ],
+      outputs: [
+        { label: 'Synthesized Brief', type: 'Markdown', destination: 'Memory Agent' },
+        { label: 'Raw Data Matrix', type: 'CSV/Table', destination: 'Learning Agent' }
+      ],
+      tools: ['Web Scraper', 'Doc Parser', 'Entity Extractor']
+    },
+    {
+      id: 'agent-mem-04',
+      name: 'Memory Agent',
+      type: 'memory',
+      icon: '🧠',
+      status: 'ACTIVE',
+      goal: 'Maintaining associative knowledge graph and hierarchical contextual indexes',
+      task: 'Maintaining associative knowledge graph and hierarchical contextual indexes',
+      progress: 100,
+      x: 740, y: 410, w: 360, h: 320,
+      memory: 'CONNECTED',
+      guardrails: 'ACTIVE',
+      action: 'Standing by for contextual associative retrieval queries...',
+      perm: 'Autonomous',
+      auto: 'Full Auto',
+      inputs: [
+        { label: 'Incoming Embeddings', type: 'HNSW', source: 'Learning Agent' },
+        { label: 'Research Dossiers', type: 'Markdown', source: 'Research Agent' }
+      ],
+      outputs: [
+        { label: 'Context Hydration', type: 'Context', destination: 'Planning Agent' }
+      ],
+      tools: ['Vector DB', 'Graph Store', 'Semantic Indexer']
+    },
+    {
+      id: 'agent-plan-05',
+      name: 'Planning Agent',
+      type: 'planning',
+      icon: '🗺️',
+      status: 'THINKING',
+      goal: 'Decomposing complex objectives into coordinated multi-agent subtasks',
+      task: 'Decomposing complex objectives into coordinated multi-agent subtasks',
+      progress: 48,
+      x: 540, y: 260, w: 360, h: 320,
+      memory: 'CONNECTED',
+      guardrails: 'ACTIVE',
+      action: 'Calculating optimal task dependency graph and critical path...',
+      perm: 'Approval Required',
+      auto: 'Supervised',
+      inputs: [
+        { label: 'High-Level Directive', type: 'Goal', source: 'AEGIS Core' },
+        { label: 'Knowledge Context', type: 'Context', source: 'Memory Agent' }
+      ],
+      outputs: [
+        { label: 'Dispatched Subtasks', type: 'Task[]', destination: 'All Agents' }
+      ],
+      tools: ['DAG Planner', 'Resource Allocator', 'Dependency Resolver']
+    }
+  ];
+
+  let agents = defaultAgents;
+  function saveAgents(){
+    localStorage.setItem('aegis_standalone_agents_v2', JSON.stringify(agents));
+  }
+
+  function toggleExpandAgent(id, ev){
+    if(ev) ev.stopPropagation();
+    expandedAgentId = (expandedAgentId === id ? null : id);
+    renderAgents();
+    drawLinks();
+  }
+
+  // Simulated API Logs
+  let apiLogs = [
+    { method: 'POST', endpoint: '/api/learning/ingest', status: '200 OK', time: '14:22:04' },
+    { method: 'GET', endpoint: '/api/memory/query', status: '200 OK', time: '14:22:11' },
+    { method: 'POST', endpoint: '/api/security/evaluate-token', status: 'APPROVAL_REQUIRED', time: '14:23:08' },
+    { method: 'POST', endpoint: '/api/research/synthesize', status: '200 OK', time: '14:23:45' }
+  ];
+
+  // DOM references
+  const canvas = document.getElementById('canvas');
+  const plane = document.getElementById('spatialPlane');
+  const svg = document.getElementById('links');
+  const zoomDisplay = document.getElementById('zoomDisplay');
+  const agentsContainer = document.getElementById('agentsContainer');
+
+  // ---------- Zoom & Pan Engine ----------
+  function updateTransform(){
+    plane.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
+    zoomDisplay.textContent = `${Math.round(zoom * 100)}%`;
+    drawLinks();
+  }
+
+  function setZoom(newZoom){
+    zoom = Math.min(2.0, Math.max(0.5, Math.round(newZoom * 100) / 100));
+    updateTransform();
+  }
+
+  document.getElementById('zoomInBtn').onclick = () => setZoom(zoom + 0.1);
+  document.getElementById('zoomOutBtn').onclick = () => setZoom(zoom - 0.1);
+  document.getElementById('resetViewBtn').onclick = () => {
+    zoom = 1.0;
+    pan = { x: 0, y: 0 };
+    updateTransform();
+  };
+
+  // Mouse wheel zoom (CTRL/CMD + wheel)
+  canvas.addEventListener('wheel', (e) => {
+    if(e.ctrlKey || e.metaKey){
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.08 : -0.08;
+      setZoom(zoom + delta);
+    }
+  }, { passive: false });
+
+  // Pan tool selection & drag
+  const toolSelectBtn = document.getElementById('toolSelectBtn');
+  const toolPanBtn = document.getElementById('toolPanBtn');
+  let isSpacePressed = false;
+  let isDraggingCanvas = false;
+
+  toolSelectBtn.onclick = () => {
+    activeTool = 'select';
+    toolSelectBtn.classList.add('active');
+    toolPanBtn.classList.remove('active');
+    canvas.classList.remove('panning');
+  };
+  toolPanBtn.onclick = () => {
+    activeTool = 'pan';
+    toolPanBtn.classList.add('active');
+    toolSelectBtn.classList.remove('active');
+    canvas.classList.add('panning');
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if(e.code === 'Space' && !['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)){
+      isSpacePressed = true;
+      canvas.classList.add('panning');
+    }
+  });
+  window.addEventListener('keyup', (e) => {
+    if(e.code === 'Space'){
+      isSpacePressed = false;
+      if(activeTool !== 'pan') canvas.classList.remove('panning');
+    }
+  });
+
+  canvas.addEventListener('pointerdown', (e) => {
+    const isBg = e.target === canvas || e.target.classList.contains('grid-bg') || e.target === plane;
+    const isPan = activeTool === 'pan' || isSpacePressed || e.button === 1;
+
+    if(isBg || isPan){
+      isDraggingCanvas = true;
+      const startX = e.clientX;
+      const startY = e.clientY;
+      const initPan = { ...pan };
+
+      function onMove(ev){
+        pan.x = Math.round(initPan.x + (ev.clientX - startX));
+        pan.y = Math.round(initPan.y + (ev.clientY - startY));
+        updateTransform();
+      }
+      function onUp(){
+        isDraggingCanvas = false;
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+      }
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    }
+  });
+
+  // ---------- Render Agent Windows ----------
+  function renderAgents(){
+    agentsContainer.innerHTML = '';
+    agents.forEach(agent => {
+      const isExpanded = (expandedAgentId === agent.id);
+      const win = document.createElement('div');
+      win.id = `agent-window-${agent.id}`;
+      win.className = `agent-window state-${agent.status} ${selectedAgentId === agent.id ? 'selected' : ''} ${isExpanded ? 'agent-expanded' : 'agent-compact'}`;
+      win.style.transform = `translate(${agent.x}px, ${agent.y}px)`;
+      if(isExpanded){
+        win.style.width = `${agent.w || 360}px`;
+        win.style.height = 'auto';
+        win.style.cursor = 'default';
+      } else {
+        win.style.width = '250px';
+        win.style.height = 'auto';
+        win.style.cursor = 'pointer';
+      }
+
+      // Compact view content
+      let bodyHtml = '';
+      if(!isExpanded){
+        bodyHtml = `
+          <div class="agent-compact-body">
+            <div class="agent-compact-task">${agent.task || agent.goal}</div>
+            <div class="agent-progress-row" style="margin-top:2px;">
+              <div class="agent-progress-bar" style="height:3px;">
+                <div class="agent-progress-fill" style="width:${agent.progress}%;"></div>
+              </div>
+              <div class="agent-progress-text" style="font-size:9.5px;">${agent.progress}%</div>
+            </div>
+          </div>
+        `;
+      } else {
+        // Expanded view content with dynamic I/O
+        let inputsHtml = '';
+        if(agent.inputs && agent.inputs.length > 0){
+          inputsHtml = `
+            <div style="margin-top:4px;">
+              <div style="font-size:9.5px;color:var(--teal);font-weight:700;text-transform:uppercase;margin-bottom:3px;">Inputs</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                ${agent.inputs.map(i => `<span class="agent-io-badge">${i.label} (${i.type})</span>`).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        let outputsHtml = '';
+        if(agent.outputs && agent.outputs.length > 0){
+          outputsHtml = `
+            <div style="margin-top:4px;">
+              <div style="font-size:9.5px;color:var(--violet);font-weight:700;text-transform:uppercase;margin-bottom:3px;">Outputs</div>
+              <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                ${agent.outputs.map(o => `<span class="agent-io-badge" style="color:var(--violet);">${o.label} (${o.type})</span>`).join('')}
+              </div>
+            </div>
+          `;
+        }
+
+        bodyHtml = `
+          <div class="agent-body">
+            <div class="agent-task">${agent.task || agent.goal}</div>
+            <div class="agent-progress-row">
+              <div class="agent-progress-bar">
+                <div class="agent-progress-fill" style="width:${agent.progress}%;"></div>
+              </div>
+              <div class="agent-progress-text">${agent.progress}%</div>
+            </div>
+            <div class="agent-meta-grid">
+              <div class="agent-meta-item">
+                <span class="agent-meta-label">Memory</span>
+                <span class="agent-meta-val" style="color:var(--teal)">CONNECTED</span>
+              </div>
+              <div class="agent-meta-item">
+                <span class="agent-meta-label">Guardrails</span>
+                <span class="agent-meta-val" style="color:var(--teal)">ACTIVE</span>
+              </div>
+            </div>
+            ${inputsHtml}
+            ${outputsHtml}
+            <div class="agent-action">${agent.action}</div>
+            <div class="agent-actions-row">
+              <button class="agent-btn" onclick="togglePauseAgent('${agent.id}', event)">${agent.status==='WAITING'?'Resume':'Pause'}</button>
+              <button class="agent-btn inspect-btn" onclick="selectAgent('${agent.id}', event)">Inspect</button>
+              <button class="agent-btn" style="color:var(--muted);" onclick="toggleExpandAgent('${agent.id}', event)">Minimize</button>
+            </div>
+          </div>
+        `;
+      }
+
+      win.innerHTML = `
+        <div class="agent-header">
+          <div class="agent-title">
+            <span>${agent.icon || '🤖'}</span>
+            <span>${agent.name}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="agent-status-badge badge-${agent.status}">
+              <span class="status-dot"></span>
+              <span>${agent.status.replace('_',' ')}</span>
+            </div>
+            <button class="agent-header-btn" onclick="toggleExpandAgent('${agent.id}', event)" title="${isExpanded ? 'Minimize Agent' : 'Expand Agent'}">
+              ${isExpanded ? '─' : '⤢'}
+            </button>
+          </div>
+        </div>
+        ${bodyHtml}
+        ${isExpanded ? '<div class="resize-handle"></div>' : ''}
+      `;
+
+      win.addEventListener('click', () => {
+        selectAgent(agent.id);
+        if(!isExpanded){
+          toggleExpandAgent(agent.id);
+        }
+      });
+
+      // Header dragging
+      const header = win.querySelector('.agent-header');
+      header.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        selectAgent(agent.id);
+
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const initX = agent.x;
+        const initY = agent.y;
+
+        function onMove(ev){
+          const dx = (ev.clientX - startX) / zoom;
+          const dy = (ev.clientY - startY) / zoom;
+          agent.x = Math.round(initX + dx);
+          agent.y = Math.round(initY + dy);
+          win.style.transform = `translate(${agent.x}px, ${agent.y}px)`;
+          drawLinks();
+        }
+        function onUp(){
+          saveAgents();
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+        }
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+      });
+
+      // Window resize
+      const handle = win.querySelector('.resize-handle');
+      handle.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const initW = agent.w;
+        const initH = agent.h;
+
+        function onMove(ev){
+          const dw = (ev.clientX - startX) / zoom;
+          const dh = (ev.clientY - startY) / zoom;
+          agent.w = Math.max(240, Math.round(initW + dw));
+          agent.h = Math.max(180, Math.round(initH + dh));
+          win.style.width = `${agent.w}px`;
+          win.style.height = `${agent.h}px`;
+          drawLinks();
+        }
+        function onUp(){
+          saveAgents();
+          window.removeEventListener('pointermove', onMove);
+          window.removeEventListener('pointerup', onUp);
+        }
+        window.addEventListener('pointermove', onMove);
+        window.addEventListener('pointerup', onUp);
+      });
+
+      agentsContainer.appendChild(win);
+    });
+
+    document.getElementById('activeAgentsMetric').textContent = agents.filter(a=>a.status!=='COMPLETED'&&a.status!=='BLOCKED').length;
+    document.getElementById('coreAgentCount').textContent = agents.length;
+    drawLinks();
+  }
+
+  // ---------- SVG Link Path Drawing ----------
+  function drawLinks(){
+    [...svg.querySelectorAll('path')].forEach(p => p.remove());
+
+    const core = plane.querySelector('.core-orb');
+    if(!core) return;
+
+    const planeRect = plane.getBoundingClientRect();
+    const coreRect = core.getBoundingClientRect();
+    const coreCenter = {
+      x: (coreRect.left + coreRect.width/2 - planeRect.left) / zoom,
+      y: (coreRect.top + coreRect.height/2 - planeRect.top) / zoom
+    };
+
+    function pt(el){
+      const r = el.getBoundingClientRect();
+      return {
+        left: (r.left - planeRect.left)/zoom,
+        right: (r.right - planeRect.left)/zoom,
+        y: (r.top + r.height/2 - planeRect.top)/zoom,
+        x: (r.left + r.width/2 - planeRect.left)/zoom
+      };
+    }
+
+    let i = 0;
+
+    // 1. Metric cards
+    plane.querySelectorAll('#metricStack [data-node]').forEach(card => {
+      const p = pt(card);
+      const startX = p.right, startY = p.y;
+      const midX = (startX + coreCenter.x)/2;
+      const d = `M ${startX} ${startY} C ${midX} ${startY}, ${midX} ${coreCenter.y}, ${coreCenter.x} ${coreCenter.y}`;
+      const base = document.createElementNS('http://www.w3.org/2000/svg','path');
+      base.setAttribute('d', d); base.classList.add('base');
+      svg.appendChild(base);
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', d);
+      path.classList.add('flow', 'flow-cyan');
+      path.style.animationDelay = (i*0.2)+'s';
+      svg.appendChild(path);
+      i++;
+    });
+
+
+
+    // 3. Agent Windows
+    agents.forEach(ag => {
+      const el = document.getElementById(`agent-window-${ag.id}`);
+      if(!el) return;
+      const p = pt(el);
+      const targetX = p.x < coreCenter.x ? p.right : p.left;
+      const targetY = p.y;
+      const midX = (coreCenter.x + targetX)/2;
+      const midY = (coreCenter.y + targetY)/2;
+      const d = `M ${coreCenter.x} ${coreCenter.y} Q ${midX} ${midY}, ${targetX} ${targetY}`;
+
+      const base = document.createElementNS('http://www.w3.org/2000/svg','path');
+      base.setAttribute('d', d); base.classList.add('base');
+      svg.appendChild(base);
+
+      let colorClass = 'flow-cyan';
+      if(ag.status === 'THINKING') colorClass = 'flow-violet';
+      else if(ag.status === 'WAITING' || ag.status === 'APPROVAL_REQUIRED') colorClass = 'flow-gold';
+      else if(ag.status === 'BLOCKED' || ag.status === 'ERROR') colorClass = 'flow-danger';
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+      path.setAttribute('d', d);
+      path.classList.add('flow', colorClass);
+      path.style.animationDelay = `${(i*0.25)%2}s`;
+      svg.appendChild(path);
+      i++;
+    });
+  }
+
+  // ---------- Inspector Controller ----------
+  function selectAgent(id, e){
+    if(e) e.stopPropagation();
+    selectedAgentId = id;
+    renderAgents();
+    openInspector();
+  }
+
+  function openInspector(){
+    const panel = document.getElementById('inspectorPanel');
+    const ag = agents.find(a => a.id === selectedAgentId);
+    if(!ag) return;
+
+    document.getElementById('inspectorIcon').textContent = ag.icon || '🤖';
+    document.getElementById('inspectorTitle').textContent = ag.name;
+    document.getElementById('inspectorSubtitle').textContent = `ID: ${ag.id} • ${ag.type.toUpperCase()}`;
+
+    renderInspectorBody(ag);
+    panel.classList.add('open');
+  }
+
+  function closeInspector(){
+    document.getElementById('inspectorPanel').classList.remove('open');
+  }
+
+  function switchTab(tab){
+    inspectorCurrentTab = tab;
+    document.querySelectorAll('.inspector-tab').forEach(el => {
+      el.classList.toggle('active', el.textContent.toLowerCase().includes(tab));
+    });
+    const ag = agents.find(a => a.id === selectedAgentId);
+    if(ag) renderInspectorBody(ag);
+  }
+
+  function renderInspectorBody(ag){
+    const body = document.getElementById('inspectorBody');
+    if(inspectorCurrentTab === 'overview'){
+      body.innerHTML = `
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--panel-border);border-radius:10px;padding:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-size:11px;color:var(--muted);text-transform:uppercase;">Execution State</span>
+            <span class="agent-status-badge badge-${ag.status}"><span class="status-dot"></span>${ag.status}</span>
+          </div>
+          <div style="font-size:12px;margin-top:6px;">${ag.action}</div>
+        </div>
+        <div class="form-group">
+          <span class="form-label">Objective / Primary Goal</span>
+          <div style="background:rgba(0,0,0,0.25);border:1px solid var(--panel-border);padding:8px 12px;border-radius:8px;font-size:12px;line-height:1.4;">${ag.goal}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="background:rgba(255,255,255,0.02);border:1px solid var(--panel-border);padding:8px;border-radius:8px;">
+            <div style="font-size:9.5px;color:var(--muted)">PERMISSION</div>
+            <div style="font-size:11.5px;font-weight:600;color:var(--teal)">${ag.perm || 'Autonomous'}</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02);border:1px solid var(--panel-border);padding:8px;border-radius:8px;">
+            <div style="font-size:9.5px;color:var(--muted)">AUTOMATION</div>
+            <div style="font-size:11.5px;font-weight:600;color:var(--gold)">${ag.auto || 'Supervised'}</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <span class="form-label">Available Capability Tools</span>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;">
+            ${(ag.tools||['Web Scraper','Reasoner']).map(t=>`<span style="background:rgba(55,232,196,0.08);border:1px solid rgba(55,232,196,0.25);color:var(--teal);font-size:10.5px;padding:3px 8px;border-radius:6px;">${t}</span>`).join('')}
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="agent-btn" onclick="togglePauseAgent('${ag.id}')">${ag.status==='WAITING'?'Resume':'Pause'}</button>
+          <button class="agent-btn" style="color:var(--gold)" onclick="openApprovalModal()">Trigger Guardrail</button>
+          <button class="agent-btn" style="color:var(--danger)" onclick="terminateAgent('${ag.id}')">Terminate</button>
+        </div>
+      `;
+    } else if(inspectorCurrentTab === 'api'){
+      body.innerHTML = `
+        <div style="font-size:11px;color:var(--muted)">Live telemetry of simulated HTTP microservice endpoints:</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+          ${apiLogs.map(l => `
+            <div style="background:rgba(0,0,0,0.35);border:1px solid var(--panel-border);border-radius:6px;padding:6px 8px;font-family:monospace;font-size:11px;">
+              <div style="display:flex;justify-content:space-between;">
+                <span style="color:var(--violet);font-weight:700;">${l.method}</span>
+                <span style="color:${l.status.includes('OK')?'var(--teal)':l.status.includes('APPROVAL')?'var(--gold)':'var(--danger)'}">${l.status}</span>
+              </div>
+              <div style="color:var(--text);margin-top:2px;">${l.endpoint}</div>
+              <div style="font-size:9.5px;color:var(--muted);margin-top:2px;">${l.time}</div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+    } else if(inspectorCurrentTab === 'guardrails'){
+      body.innerHTML = `
+        <div style="background:rgba(234,179,90,0.08);border:1px solid rgba(234,179,90,0.3);border-radius:8px;padding:10px;font-size:11.5px;line-height:1.4;">
+          <div style="color:var(--gold);font-weight:700;">SAFETY BOUNDARIES ENFORCED</div>
+          Financial transactions, database egress, or privileged token revocation require operator biometric or cryptographic confirmation.
+        </div>
+        <button class="agent-btn inspect-btn" style="padding:8px 12px;margin-top:8px;" onclick="openApprovalModal()">Simulate High-Risk Guardrail Check</button>
+      `;
+    } else {
+      body.innerHTML = `
+        <div style="background:rgba(255,255,255,0.02);border:1px solid var(--panel-border);border-radius:8px;padding:10px;">
+          <div style="font-size:12px;font-weight:600;color:var(--teal)">User Audio & Hardware Preferences</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Threshold: INR 10,000 max. Over-ear active noise cancelling required.</div>
+        </div>
+      `;
+    }
+  }
+
+  function togglePauseAgent(id, e){
+    if(e) e.stopPropagation();
+    const ag = agents.find(a => a.id === id);
+    if(ag){
+      ag.status = ag.status === 'WAITING' ? 'EXECUTING' : 'WAITING';
+      ag.action = ag.status === 'WAITING' ? 'Paused by operator' : 'Resuming task execution...';
+      saveAgents();
+      renderAgents();
+      if(selectedAgentId === id) renderInspectorBody(ag);
+    }
+  }
+
+  function terminateAgent(id){
+    agents = agents.filter(a => a.id !== id);
+    saveAgents();
+    renderAgents();
+    closeInspector();
+  }
+
+  // ---------- Modals Controller ----------
+  const newAgentModal = document.getElementById('newAgentModal');
+  document.getElementById('openNewAgentBtn').onclick = () => newAgentModal.classList.add('open');
+  document.getElementById('sidebarDeployBtn').onclick = () => newAgentModal.classList.add('open');
+  document.getElementById('workflowPlusBtn').onclick = () => newAgentModal.classList.add('open');
+
+  function closeNewAgentModal(){
+    newAgentModal.classList.remove('open');
+  }
+
+  function handleTypeSelection(val){
+    const nameEl = document.getElementById('newAgentName');
+    const goalEl = document.getElementById('newAgentGoal');
+    if(val === 'travel'){
+      nameEl.value = 'Travel Agent';
+      goalEl.value = 'Find flights from BLR to SFO with flexible rebooking under ₹80,000';
+    } else if(val === 'finance'){
+      nameEl.value = 'Finance Reconciliation Agent';
+      goalEl.value = 'Reconcile vendor invoices against Stripe payout ledger';
+    } else if(val === 'document'){
+      nameEl.value = 'Document Analysis Agent';
+      goalEl.value = 'Extract SLA liability clauses from vendor MSA contracts';
+    } else if(val === 'calendar'){
+      nameEl.value = 'Calendar Coordination Agent';
+      goalEl.value = 'Resolve double-booked review sessions and suggest open slots';
+    } else {
+      nameEl.value = `${val.charAt(0).toUpperCase()+val.slice(1)} Agent`;
+      goalEl.value = `Execute autonomous operations for ${val} category`;
+    }
+  }
+
+  function handleCreateAgent(e){
+    e.preventDefault();
+    const type = document.getElementById('newAgentType').value;
+    const name = document.getElementById('newAgentName').value;
+    const goal = document.getElementById('newAgentGoal').value;
+    const perm = document.getElementById('newAgentPerm').value;
+    const auto = document.getElementById('newAgentAuto').value;
+
+    const icons = { shopping:'🛒', email:'📧', learning:'📚', security:'🔐', subscription:'🎬', travel:'✈️', calendar:'📅', finance:'💳', document:'📄', assistant:'🤖' };
+
+    // Place around core
+    const angle = (agents.length * (2 * Math.PI)) / 6;
+    const newAg = {
+      id: `agent-${type}-${Math.random().toString(36).substring(2,6)}`,
+      name,
+      type,
+      icon: icons[type] || '🤖',
+      status: 'THINKING',
+      goal,
+      progress: 10,
+      x: Math.round(540 + 260 * Math.cos(angle)),
+      y: Math.round(270 + 260 * Math.sin(angle)),
+      w: 280, h: 215,
+      memory: 'CONNECTED',
+      guardrails: 'ACTIVE',
+      action: 'Initializing reasoning kernel and verifying safety parameters...',
+      perm, auto,
+      tools: ['Web Scraper', 'Reasoner']
+    };
+
+    agents.unshift(newAg);
+    saveAgents();
+    closeNewAgentModal();
+    renderAgents();
+    selectAgent(newAg.id);
+
+    apiLogs.unshift({ method:'POST', endpoint:'/api/agents', status:'201 Created', time: new Date().toLocaleTimeString() });
+  }
+
+  // Approval Modal
+  const approvalModal = document.getElementById('approvalModal');
+  document.getElementById('pendingEscalationsRow').onclick = () => openApprovalModal();
+  function openApprovalModal(id){
+    approvalModal.classList.add('open');
+  }
+  function resolveApproval(approved){
+    approvalModal.classList.remove('open');
+    apiLogs.unshift({
+      method: 'POST',
+      endpoint: approved ? '/api/approvals/appr-01/approve' : '/api/approvals/appr-01/reject',
+      status: approved ? '200 OK' : '403 Rejected',
+      time: new Date().toLocaleTimeString()
+    });
+
+    const secAgent = agents.find(a => a.type === 'security' || a.id === selectedAgentId);
+    if(secAgent){
+      secAgent.status = approved ? 'EXECUTING' : 'WAITING';
+      secAgent.action = approved ? 'Privileged token revoked successfully.' : 'Action halted by human operator.';
+      saveAgents();
+      renderAgents();
+    }
+  }
+
+  // Live Simulation Trigger
+  const simBtn = document.getElementById('simBtn');
+  simBtn.onclick = () => {
+    simulationActive = !simulationActive;
+    simBtn.classList.toggle('active', simulationActive);
+    if(simulationActive){
+      simBtn.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--violet);box-shadow:0 0 6px var(--violet);"></span>Simulating...';
+      const shopAg = agents.find(a => a.type === 'shopping');
+      if(shopAg){
+        selectAgent(shopAg.id);
+        shopAg.status = 'THINKING';
+        shopAg.action = 'Querying candidate headphone models under ₹10,000...';
+        shopAg.progress = 25;
+        renderAgents();
+
+        setTimeout(() => {
+          shopAg.status = 'EXECUTING';
+          shopAg.action = 'Crawling live discount APIs on Tata Cliq and Amazon...';
+          shopAg.progress = 55;
+          renderAgents();
+          apiLogs.unshift({ method:'POST', endpoint:'/api/shopping/search', status:'200 OK', time: new Date().toLocaleTimeString() });
+        }, 1500);
+
+        setTimeout(() => {
+          shopAg.status = 'APPROVAL_REQUIRED';
+          shopAg.action = 'Price match verified (₹9,499). Guardrail checkout approval requested!';
+          shopAg.progress = 75;
+          renderAgents();
+          apiLogs.unshift({ method:'POST', endpoint:'/api/shopping/purchase', status:'APPROVAL_REQUIRED', time: new Date().toLocaleTimeString() });
+          openApprovalModal();
+        }, 3200);
+      }
+    } else {
+      simBtn.innerHTML = '<span style="width:6px;height:6px;border-radius:50%;background:var(--violet);"></span>Simulate';
+    }
+  };
+
+  // Runtime clock
+  let sec = 1*3600 + 24*60 + 8;
+  let clockRunning = true;
+  const clockEl = document.getElementById('runtimeClock');
+  setInterval(() => {
+    if(clockRunning){
+      sec++;
+      const h = String(Math.floor(sec/3600)).padStart(2,'0');
+      const m = String(Math.floor((sec%3600)/60)).padStart(2,'0');
+      const s = String(sec%60).padStart(2,'0');
+      clockEl.textContent = `${h}:${m}:${s}`;
+    }
+  }, 1000);
+
+  document.getElementById('clockToggleBtn').onclick = () => { clockRunning = !clockRunning; };
+  document.getElementById('clockResetBtn').onclick = () => { sec = 0; };
+
+  // Init
+  window.addEventListener('load', () => {
+    renderAgents();
+    setTimeout(drawLinks, 100);
+  });
+  window.addEventListener('resize', drawLinks);
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "🛡️ Start BE 2 Server (Uvicorn)",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "backend.app.main:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000",
+                "--reload"
+            ],
+            "jinja": true,
+            "justMyCode": true,
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "⚡ Run Act II Chaos Simulator",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "backend.app.simulator.chaos_simulator",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "🧪 Run Pytest Suite",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "pytest",
+            "args": ["backend/tests", "-v"],
+            "console": "integratedTerminal"
+        }
+    ]
+}
