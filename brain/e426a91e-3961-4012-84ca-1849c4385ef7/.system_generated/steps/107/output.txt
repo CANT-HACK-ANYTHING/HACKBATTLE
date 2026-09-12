@@ -1,5 +1,0 @@
-
-The command exited with code 0.
-Output:
-Read 49845 characters.
-

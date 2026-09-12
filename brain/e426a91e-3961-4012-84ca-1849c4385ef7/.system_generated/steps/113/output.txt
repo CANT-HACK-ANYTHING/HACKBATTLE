@@ -1,6 +1,0 @@
-
-The command exited with code 0.
-Output:
-Updated literal URL in index.html
-Updated literal URL in aegis_mission_control.html
-

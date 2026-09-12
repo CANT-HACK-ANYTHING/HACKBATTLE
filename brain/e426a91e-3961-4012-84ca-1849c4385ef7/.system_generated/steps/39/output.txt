@@ -1,5 +1,0 @@
-
-The command exited with code 0.
-Output:
-Base config and sample data generated successfully.
-
