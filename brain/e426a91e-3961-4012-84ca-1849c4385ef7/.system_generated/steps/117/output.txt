@@ -1,0 +1,17 @@
+The following changes were made by the replace_file_content tool to: C:\Users\Piyush\.gemini\antigravity\brain\e426a91e-3961-4012-84ca-1849c4385ef7\walkthrough.md. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -89,5 +89,11 @@
+ - **Interactive HTML5 Canvas Episodic Memory Graph**: Neural landmark nodes with particle edge flows, coordinate readouts, and dynamic vector relocalization arcs that animate during self-healing.
+ - **Boundary Hypervisor & Proof-of-Boundary**: Real-time contract verification, emergency danger styling, and cryptographic SHA-256 audit manifest cards.
+ - **Synthesized Web Audio Engine**: Zero-dependency procedural sound effects (actuation clicks, relocalization chimes, and boundary warning klaxons) with sound toggle.
++- **Live Local Wi-Fi Integration (BE 2)**:
++  - WebSocket link: `ws://172.18.238.74:8000/ws/telemetry` with auto-reconnect and live header status badge.
++  - `MEMORY_DRIFT_DETECTED` handler: Displays live warning card, moves ERP button by $\Delta x = +120\text{px}$, and animates relocalization vector.
++  - `SELF_HEALING_COMPLETED` handler: Displays flashing emerald success card and turns node emerald green (`#10b981`).
++  - Initial memory graph sync: `GET http://172.18.238.74:8000/api/memory/graph?task_id=vendor_payout_task` on boot.
++
+ 
+ 
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

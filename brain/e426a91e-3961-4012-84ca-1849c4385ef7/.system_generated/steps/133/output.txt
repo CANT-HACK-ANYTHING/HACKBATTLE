@@ -1,0 +1,8 @@
+
+The command exited with code 1.
+Output:
+  File "<string>", line 7
+    assert 'id=" filter-btn-all\'
+           ^
+SyntaxError: unterminated string literal (detected at line 7)
+

@@ -1,0 +1,34 @@
+
+The command exited with code 0.
+Output:
+1096:       });
+1097:     }
+1098: 
+1099:     function addLog(msg, type = "info") {
+1100:       const log = document.getElementById("telemetry-log");
+1101:       const d = new Date();
+1102:       const timeStr = `[${d.toTimeString().split(' ')[0]}]`;
+1103:       const div = document.createElement("div");
+1104:       div.className = "py-0.5";
+1105: 
+1106:       if (type === "warn") div.className += " text-amber-400";
+1107:       else if (type === "crit") div.className += " text-rose-400 font-bold";
+1108:       else if (type === "success") div.className += " text-emerald-400";
+1109:       else div.className += " text-cyan-400";
+1110: 
+1111:       div.innerText = `${timeStr} ${msg}`;
+1112:       log.appendChild(div);
+1113:       log.scrollTop = log.scrollHeight;
+1114:     }
+1115: 
+1116:     function addLedgerRecord(voucher, vendor, amount) {
+1117:       settledCount++;
+1118:       document.getElementById("ledger-count").innerText = `${settledCount} records`;
+1119:       const tbody = document.getElementById("ledger-rows");
+1120:       if (settledCount === 1) tbody.innerHTML = "";
+1121: 
+1122:       const d = new Date();
+1123:       const tr = document.createElement("tr");
+1124:       tr.className = "hover:bg-slate-50 transition";
+1125:       tr.innerHTML = `
+

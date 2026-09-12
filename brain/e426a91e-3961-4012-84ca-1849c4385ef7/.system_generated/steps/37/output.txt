@@ -1,0 +1,17 @@
+
+The command exited with code 0.
+Output:
+
+
+    Directory: C:\Users\Piyush\.gemini\antigravity\scratch\aegis_os
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+d-----        12-09-2026     10:14                aegis                                                                
+d-----        12-09-2026     10:14                mock_system                                                          
+d-----        12-09-2026     10:14                tests                                                                
+d-----        12-09-2026     10:14                data                                                                 
+
+
+
