@@ -1,5 +1,0 @@
-
-The command exited with code 0.
-Output:
-Requirement already satisfied: pip in .\venv\Lib\site-packages (26.2.1)
-

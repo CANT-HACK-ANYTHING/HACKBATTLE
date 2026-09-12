@@ -1,4 +1,0 @@
-{"name":"app","isDir":true}
-{"name":"libs_hand","isDir":true}
-
-Summary: This directory contains 2 subdirectories and 0 files.
