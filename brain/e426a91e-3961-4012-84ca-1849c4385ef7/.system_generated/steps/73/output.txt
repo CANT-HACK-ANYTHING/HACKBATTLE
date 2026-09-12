@@ -1,0 +1,14 @@
+
+The command exited with code 0.
+Output:
+
+
+    Directory: C:\Users\Piyush\.gemini\antigravity\scratch\aegis_os\frontend
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----        12-09-2026     10:29          49887 index.html                                                           
+
+
+
