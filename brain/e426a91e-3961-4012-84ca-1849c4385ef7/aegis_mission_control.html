@@ -82,12 +82,17 @@
       if (!list) return;
       list.innerHTML = "";
       memoryNodes.forEach(node => {
+        const isSubmit = String(node.id).toLowerCase().includes("submit") || String(node.label).toLowerCase().includes("submit");
+        const coordsId = isSubmit ? 'id="node-submit-coords"' : '';
+        const statusId = isSubmit ? 'id="node-submit-status"' : '';
+        const labelId = isSubmit ? 'id="node-submit-label"' : '';
+
         const div = document.createElement("div");
         div.className = "flex justify-between items-center text-slate-300 py-0.5 border-b border-slate-900";
         div.innerHTML = `
-          <span style="color: ${node.color}">? node_${node.id}</span>
-          <span class="text-slate-500">(x:${Math.round(node.x * 640)}, y:${Math.round(node.y * 480)})</span>
-          <span class="text-[10px]" style="color: ${node.color}">SYNCED</span>
+          <span ${labelId} style="color: ${node.color}">● node_${node.id}</span>
+          <span ${coordsId} class="text-slate-500">(x:${Math.round(node.x * 640)}, y:${Math.round(node.y * 480)})</span>
+          <span ${statusId} class="text-[10px]" style="color: ${node.color}">SYNCED</span>
         `;
         list.appendChild(div);
       });
@@ -1302,9 +1307,13 @@
                   // Update memory node position
                   submitNode.x += 0.25;
                   submitNode.color = "#a855f7";
-                  document.getElementById("node-submit-coords").innerText = "(x:350, y:230) [HEALED]";
-                  document.getElementById("node-submit-status").innerText = "RE-ANCHORED";
-                  document.getElementById("node-submit-status").className = "text-amber-400 text-[10px]";
+                  const nsc = document.getElementById("node-submit-coords");
+                  if (nsc) nsc.innerText = "(x:350, y:230) [HEALED]";
+                  const nss = document.getElementById("node-submit-status");
+                  if (nss) {
+                    nss.innerText = "RE-ANCHORED";
+                    nss.className = "text-amber-400 text-[10px]";
+                  }
 
                   addLog("Visual relocalization SUCCESS. Updated episodic memory graph.", "success");
                   moveCursorToElement("btn-erp-submit", () => {
@@ -1439,24 +1448,37 @@
       document.getElementById("pob-alert-text").innerText = "Status: Pre-flight invariant engine ready.";
 
       // Reset Status pill
-      document.getElementById("system-status-text").innerText = "SYSTEM ARMED // IDLE";
-      document.getElementById("system-status-badge").className = "px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 flex items-center space-x-2";
-      document.getElementById("graph-active-task").innerText = "IDLE";
-      document.getElementById("graph-drifts").innerText = "0";
+      const sysStatus = document.getElementById("system-status-text");
+      if (sysStatus) sysStatus.innerText = "SYSTEM ARMED // IDLE";
+      const sysBadge = document.getElementById("system-status-badge");
+      if (sysBadge) sysBadge.className = "px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 flex items-center space-x-2";
+      const gTask = document.getElementById("graph-active-task");
+      if (gTask) gTask.innerText = "IDLE";
+      const gDrifts = document.getElementById("graph-drifts");
+      if (gDrifts) gDrifts.innerText = "0";
 
       // Reset memory nodes
-      const submitNode = memoryNodes.find(n => n.id === "submit");
-      submitNode.x = 0.50;
-      submitNode.color = "#10b981";
+      const submitNode = memoryNodes.find(n => n.id === "submit" || String(n.id).includes("submit"));
+      if (submitNode) {
+        submitNode.x = 0.50;
+        submitNode.color = "#10b981";
+      }
       driftVectorAnim = null;
-      document.getElementById("node-submit-coords").innerText = "(x:110, y:230)";
-      document.getElementById("node-submit-status").innerText = "CACHED";
-      document.getElementById("node-submit-status").className = "text-emerald-400 text-[10px]";
+      const nsc = document.getElementById("node-submit-coords");
+      if (nsc) nsc.innerText = "(x:110, y:230)";
+      const nss = document.getElementById("node-submit-status");
+      if (nss) {
+        nss.innerText = "CACHED";
+        nss.className = "text-emerald-400 text-[10px]";
+      }
 
       // Cursor home
-      cursor.style.left = "240px";
-      cursor.style.top = "220px";
-      document.getElementById("telemetry-coords").innerText = "CURSOR: (240, 220)";
+      if (typeof cursor !== "undefined" && cursor) {
+        cursor.style.left = "240px";
+        cursor.style.top = "220px";
+      }
+      const tCoords = document.getElementById("telemetry-coords");
+      if (tCoords) tCoords.innerText = "CURSOR: (240, 220)";
 
       addLog("System reset: pristine baseline restored.", "info");
     }
