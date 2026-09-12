@@ -1,0 +1,14 @@
+The following changes were made by the replace_file_content tool to: C:\Users\adars_6dx4mbx\.gemini\antigravity\brain\6e28a4ed-fc85-4580-a070-51c45fab79ce\libs_hand\requirements.txt. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -5,7 +5,7 @@
+ keyboard==0.13.5
+ opencv-python==5.0.0.93
+ mediapipe==0.10.33
+-scikit-image==0.22.0
++
+ flask==3.0.3
+ structlog==24.1.0
+ pytest==8.2.2
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

@@ -1,0 +1,14 @@
+
+The command exited with code 1.
+Output:
+Copy-Item : Cannot find path 
+'C:\Users\adars_6dx4mbx\.gemini\antigravity\brain\6e28a4ed-fc85-4580-a070-51c45fab79ce\run_pipeline.py' because it 
+does not exist.
+At line:1 char:255
++ ... rse -Force; Copy-Item -Path 'C:\Users\adars_6dx4mbx\.gemini\antigravi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (C:\Users\adars_...run_pipeline.py:String) [Copy-Item], ItemNotFoundExce 
+   ption
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.CopyItemCommand
+ 
+

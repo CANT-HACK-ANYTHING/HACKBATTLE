@@ -1,0 +1,29 @@
+syntax = "proto3";
+package event;
+
+message UIElement {
+  int64 id = 1;
+  string name = 2;
+  string role = 3;
+  int32 x = 4;
+  int32 y = 5;
+  int32 w = 6;
+  int32 h = 7;
+}
+
+message ScreenEvent {
+  int64 ts = 1;
+  bytes png = 2;
+  repeated UIElement elements = 3;
+}
+
+enum IntentAction {
+  LOOK_CLICK = 0;
+  // add other actions as needed
+}
+
+message Intent {
+  int64 ts = 1;
+  IntentAction action = 2;
+  int64 element_id = 3;
+}

@@ -1,0 +1,11 @@
+The following changes were made by the replace_file_content tool to: C:\Users\adars_6dx4mbx\.gemini\antigravity\brain\6e28a4ed-fc85-4580-a070-51c45fab79ce\libs_hand\requirements.txt. If relevant, proactively run terminal commands to execute this code for the USER. Don't ask for permission.
+[diff_block_start]
+@@ -1,4 +1,4 @@
+-dxcam==0.4.0
++dxcam==0.3.0
+ mss==9.0.1
+ pywinauto==0.6.8
+ pynput==1.7.6
+[diff_block_end]
+
+Please note that the above snippet only shows the MODIFIED lines from the last change. It shows up to 3 lines of unchanged lines before and after the modified lines. The actual file contents may have many more lines not shown.

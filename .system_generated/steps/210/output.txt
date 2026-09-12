@@ -1,0 +1,7 @@
+{"name":".gitignore","sizeBytes":"71"}
+{"name":"Include","isDir":true}
+{"name":"Lib","isDir":true}
+{"name":"Scripts","isDir":true}
+{"name":"pyvenv.cfg","sizeBytes":"374"}
+
+Summary: This directory contains 3 subdirectories and 2 files.

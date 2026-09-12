@@ -1,0 +1,17 @@
+
+The command exited with code 0.
+Output:
+
+
+    Directory: C:\hackbattle\common
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+d-----        12-09-2026     14:59                proto                                                                
+
+[notice] A new release of pip is available: 26.1.2 -> 26.2.1
+[notice] To update, run: python.exe -m pip install --upgrade pip
+
+
+

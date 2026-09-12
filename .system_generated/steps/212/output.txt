@@ -1,0 +1,14 @@
+
+The command exited with code 0.
+Output:
+
+
+    Directory: C:\hackbattle
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+d-----        12-09-2026     14:55                venv                                                                 
+
+
+

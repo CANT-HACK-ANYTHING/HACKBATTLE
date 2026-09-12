@@ -1,0 +1,15 @@
+
+The command exited with code 1.
+Output:
+At line:1 char:108
++ ... gemini\antigravity\scratch\libs_hand\requirements.txt' -Value @'dxcam
++                                                                     ~
+No characters are allowed after a here-string header but before the end of the line.
+At line:12 char:20
++ pytest-mock==3.14.0'@
++                    ~~
+The string is missing the terminator: '.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : UnexpectedCharactersAfterHereStringHeader
+ 
+

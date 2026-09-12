@@ -1,0 +1,11 @@
+
+The command exited with code 1.
+Output:
+At line:1 char:37
++ python -m pip install --upgrade pip && python -m pip install grpcio g ...
++                                     ~~
+The token '&&' is not a valid statement separator in this version.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : InvalidEndOfLine
+ 
+
