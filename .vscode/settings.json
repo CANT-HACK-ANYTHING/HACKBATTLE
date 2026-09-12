@@ -1,8 +1,0 @@
-{
-    "python.defaultInterpreterPath": "C:\\Users\\OJUS\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
-    "python.testing.pytestArgs": [
-        "backend/tests"
-    ],
-    "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
-}
