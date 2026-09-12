@@ -24,12 +24,14 @@ class ActuatorServicer(act_grpc.ActuatorServicer):
         client_token = md.get("auth-token", "").encode()
         if TOKEN and not hmac.compare_digest(client_token, TOKEN):
             context.abort(grpc.StatusCode.UNAUTHENTICATED, "Bad token")
-        if request.type == act_pb.ActuateRequest.CLICK:
+        if request.type == act_pb.ActuationType.CLICK:
             click(request.x, request.y)
-        elif request.type == act_pb.ActuateRequest.DRAG:
+        elif request.type == act_pb.ActuationType.DRAG:
             start = MouseCtrl().position
+            if start is None:
+                start = (request.x, request.y)
             drag(start, (request.x, request.y))
-        elif request.type == act_pb.ActuateRequest.TYPE:
+        elif request.type == act_pb.ActuationType.TYPE:
             type_keys(request.text)
         else:
             log.warning("unknown actuation type", typ=request.type)

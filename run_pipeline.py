@@ -45,7 +45,7 @@ def intent_worker():
         # Publish intent (optional)
         intent = ev.Intent(
             ts=int(time.time() * 1e6),
-            action=ev.Intent.LOOK_CLICK,
+            action=ev.IntentAction.LOOK_CLICK,
             element_id=element.id,
         )
         bus.publish("hands.intent", intent)
@@ -56,14 +56,14 @@ def intent_worker():
         from common.proto import actuator_pb2 as act_pb
         channel = grpc.insecure_channel("localhost:50051")
         stub = act_grpc.ActuatorStub(channel)
-        req = act_pb.ActuateRequest(type=act_pb.ActuateRequest.CLICK, x=centre_x, y=centre_y)
+        req = act_pb.ActuateRequest(type=act_pb.ActuationType.CLICK, x=centre_x, y=centre_y)
         resp = stub.Execute(req)
         log.info("actuator response", ok=resp.ok, msg=resp.message)
         time.sleep(0.5)
 
 if __name__ == "__main__":
     # Start the screen publisher in a background thread
-    threading.Thread(target=__import__("app.screen_perception.capture").capture.start_publisher,
+    threading.Thread(target=__import__("app.screen_perception.capture", fromlist=["capture"]).start_publisher,
                     daemon=True).start()
     # Run the intent worker in the main thread
     intent_worker()
