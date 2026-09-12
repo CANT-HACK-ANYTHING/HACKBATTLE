@@ -1,15 +1,15 @@
 import time
-import dxcam
-import cv2
 import structlog
 import zmq
+import mss
+import mss.tools
 from common.proto import event_pb2 as ev
+from pywinauto import Desktop
 
 log = structlog.get_logger(__name__)
 
 def _enumerate_ui():
     """Return a list of UIElement protobuf messages using pywinauto."""
-    from pywinauto import Desktop
     elements = []
     for w in Desktop(backend="uia").windows():
         rect = w.rectangle()
@@ -32,23 +32,19 @@ def start_publisher():
     ctx = zmq.Context()
     pub = ctx.socket(zmq.PUB)
     pub.bind("tcp://127.0.0.1:5555")  # screen.events
-    cam = dxcam.create()
-    cam.start(target_fps=30)
     log.info("Screen publisher started")
-    try:
+    with mss.mss() as sct:
+        monitor = sct.monitors[1]  # primary monitor
         while True:
-            frame = cam.get_latest_frame()
-            # Encode frame as PNG bytes
-            success, buf = cv2.imencode('.png', frame)
-            png_bytes = buf.tobytes()
+            sct_img = sct.grab(monitor)
+            png_bytes = mss.tools.to_png(sct_img.rgb, sct_img.size)
             screen_msg = ev.ScreenEvent(
                 ts=int(time.time() * 1e6),
                 png=png_bytes,
                 elements=_enumerate_ui(),
             )
             pub.send_multipart([b"screen.events", screen_msg.SerializeToString()])
-            time.sleep(1.0)  # 1 Hz – adjust as needed
-    finally:
-        cam.stop()
-        pub.close()
-        ctx.term()
+            time.sleep(1.0)
+    # Cleanup (unreachable in infinite loop but kept for completeness)
+    # pub.close()
+    # ctx.term()
